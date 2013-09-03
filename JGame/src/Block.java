@@ -1,7 +1,7 @@
 
 public class Block {
 
- private boolean IsActive;
+ public boolean IsActive;
  private BlockType Type;
 
  public enum BlockType {
@@ -35,4 +35,5 @@ public class Block {
     public int GetID(){
  return Type.GetID();
     }
+
 }

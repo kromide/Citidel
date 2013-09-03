@@ -16,9 +16,9 @@ public class Game {
 	private int VBOVertexHandle;
 	private int VBOColorHandle;
 	public static GameState CurrentState = GameState.State_Menu;
-	private Chunk chunky;
+	public static Chunk chunky;
 
-	Player camera = new Player(-100, -4, -100);
+	Player camera = new Player(1,-6,1);
 	 
     float dx        = 0.0f;
     float dy        = 0.0f;
@@ -80,7 +80,7 @@ public class Game {
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
 		GL11.glLoadIdentity();
 
-		GLU.gluPerspective(45.0f, (float) displayMode.getWidth()
+		GLU.gluPerspective(90.0f, (float) displayMode.getWidth()
 				/ (float) displayMode.getHeight(), 0.1f, 300.0f);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 
@@ -89,7 +89,6 @@ public class Game {
 
 	private void Run() {
 		chunky = new Chunk(0, 0, 0);
-		GL11.glTranslatef(0f, -4f, -200f);
 		// CreateVBO();
 		while (!Display.isCloseRequested()) {
 			try {
@@ -104,7 +103,7 @@ public class Game {
 
 				
 				camera.lookThrough();
-				chunky.RebuildMesh(0, 0, 0);
+				
 				chunky.Render();
 				// Render();
 				
@@ -155,9 +154,9 @@ public class Game {
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_SPACE))//Jump
         {
-            camera.Jump(jumpHeight);
+        	camera.Jump(jumpHeight*dt);
         }
-
+       
 	}
 
 	private void DrawVBO() {

@@ -3,7 +3,6 @@ import java.nio.FloatBuffer;
 import java.util.Random;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 
@@ -11,12 +10,11 @@ import org.lwjgl.opengl.GL15;
 
 public class Chunk {
 
-	static final int CHUNK_SIZE = 100;
+	static final int CHUNK_SIZE = 10;
 	static final int CUBE_LENGTH = 2;
-	private Block[][][] Blocks;
+	public Block[][][] Blocks;
 	private int VBOVertexHandle;
 	private int VBOColorHandle;
-	private int StartX, StartY, StartZ;
 	private Random r;
 	
 	public void Render() {
@@ -39,7 +37,7 @@ public class Chunk {
 		GL11.glEnable(GL11.GL_COLOR_MATERIAL);
 		GL11.glEnable(GL11.GL_LIGHTING);
 	    GL11.glEnable(GL11.GL_LIGHT0);
-	    
+	   
 	}
 	public Chunk(int startX, int startY, int startZ) {
 		r= new Random();
@@ -47,11 +45,11 @@ public class Chunk {
 		for (int x = 0; x < CHUNK_SIZE; x++) {
 			for (int y = 0; y < CHUNK_SIZE; y++) {
 				for (int z = 0; z < CHUNK_SIZE; z++) {
-					if(r.nextFloat()>0.7f){
+					if(y == 1f){
 					Blocks[x][y][z] = new Block(Block.BlockType.BlockType_Dirt);
-					}else if(r.nextFloat()>0.4f){
+					}else if(y == 3f){
 						Blocks[x][y][z] = new Block(Block.BlockType.BlockType_Dirt);
-					}else if(r.nextFloat()>0.2f){
+					}else if(y == 2f){
 						Blocks[x][y][z] = new Block(Block.BlockType.BlockType_Water);
 					}else{
 						Blocks[x][y][z] = new Block(Block.BlockType.BlockType_Default);
@@ -61,22 +59,17 @@ public class Chunk {
 		}
 		VBOColorHandle = GL15.glGenBuffers();
 		VBOVertexHandle = GL15.glGenBuffers();
-		StartX = startX;
-		StartY = startY;
-		StartZ = startZ;
 		RebuildMesh(startX, startY, startZ);
 	}
-	//r.nextFloat()*10
 	public void RebuildMesh(float startX, float startY, float startZ) {
 		VBOColorHandle = GL15.glGenBuffers();
 		VBOVertexHandle = GL15.glGenBuffers();
-		long time = System.nanoTime();
 		FloatBuffer VertexPositionData = BufferUtils
-				.createFloatBuffer((CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE) * 6 * 12);
+				.createFloatBuffer((CHUNK_SIZE * CHUNK_SIZE  * CHUNK_SIZE) * 6 * 12);
 		FloatBuffer VertexColorData = BufferUtils.createFloatBuffer((CHUNK_SIZE
 				* CHUNK_SIZE * CHUNK_SIZE) * 6 * 12);
 		for (float x = 0; x < CHUNK_SIZE; x += 1) {
-			for (float y = 0; y < CHUNK_SIZE; y += 1) {
+			for (float y = 0; y <  r.nextFloat()*2; y += 1) {
 				for (float z = 0; z < CHUNK_SIZE; z += 1) {
 					VertexPositionData.put(CreateCube((float) startX + x
 							* CUBE_LENGTH, (float) startY + y * CUBE_LENGTH,
@@ -160,6 +153,7 @@ public class Chunk {
 				x + offset, y - offset, z };
 
 	}
+	
 
 	private float[] GetCubeColor(Block block) {
 		switch (block.GetID()) {
